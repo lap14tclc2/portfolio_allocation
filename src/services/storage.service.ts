@@ -22,31 +22,40 @@ export async function initialize(): Promise<void> {
 
 
 export async function readLatestSnapshot(): Promise<string> {
-  try {
-    const dateEntries = await fs.readdir(config.snapshotsDir, { withFileTypes: true });
-    const dateFolders = dateEntries
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-      .sort((a, b) => b.localeCompare(a));
+  const dirs = [config.snapshotsDir];
+  const bundledDir = path.join(config.root, 'snapshots');
+  if (config.snapshotsDir !== bundledDir) {
+    dirs.push(bundledDir);
+  }
 
-    for (const folderName of dateFolders) {
-      const folderPath = path.join(config.snapshotsDir, folderName);
-      const files = (await fs.readdir(folderPath, { withFileTypes: true }))
-        .filter((e) => e.isFile() && e.name.endsWith('.txt'))
+  for (const baseDir of dirs) {
+    try {
+      const dateEntries = await fs.readdir(baseDir, { withFileTypes: true });
+      const dateFolders = dateEntries
+        .filter((e) => e.isDirectory())
         .map((e) => e.name)
         .sort((a, b) => b.localeCompare(a));
 
-      if (files.length > 0) {
-        const latestFilePath = path.join(folderPath, files[0]);
-        return await fs.readFile(latestFilePath, 'utf8');
+      for (const folderName of dateFolders) {
+        const folderPath = path.join(baseDir, folderName);
+        const files = (await fs.readdir(folderPath, { withFileTypes: true }))
+          .filter((e) => e.isFile() && e.name.endsWith('.txt'))
+          .map((e) => e.name)
+          .sort((a, b) => b.localeCompare(a));
+
+        if (files.length > 0) {
+          const latestFilePath = path.join(folderPath, files[0]);
+          return await fs.readFile(latestFilePath, 'utf8');
+        }
       }
+    } catch (err: any) {
+      logger.warn('Failed to read snapshot directory', { baseDir, error: err.message });
     }
-  } catch (err: any) {
-    logger.warn('Failed to read snapshot directory', { error: err.message });
   }
 
   return '';
 }
+
 
 export interface SnapshotFolder {
   date: string;

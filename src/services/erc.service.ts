@@ -79,7 +79,7 @@ function buildReturnsAndMatrix(histories: HistoryEntry[][], riskWindow: RiskWind
 function solveERCWeights(count: number, matrix: number[][]): number[] {
   const target = 1 / count;
   let weights = Array(count).fill(target);
-  for (let iteration = 0; iteration < 10000; iteration += 1) {
+  for (let iteration = 0; iteration < 1000; iteration += 1) {
     const current = metrics(weights, matrix);
     if (current.risk && Math.max(...current.rc.map((value) => Math.abs(value - target))) < 1e-7) break;
     if (!current.risk || current.rc.some((value) => value <= 0)) throw new Error('ERC solver failed.');
@@ -97,6 +97,7 @@ function solveERCWeights(count: number, matrix: number[][]): number[] {
   }
   return weights;
 }
+
 
 export function calculateERC(stocks: Stock[], histories: HistoryEntry[][], allocationYear: number): ERCResult {
   const riskWindow = getRiskWindow(allocationYear);
