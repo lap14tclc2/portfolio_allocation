@@ -8,9 +8,18 @@ import { Stock, AnnualTarget, PortfolioState } from '../types';
 import { latestStocks } from './backlog.service';
 
 export async function initialize(): Promise<void> {
-  await fs.mkdir(config.dataDir, { recursive: true });
-  await fs.mkdir(config.snapshotsDir, { recursive: true });
+  try {
+    await fs.mkdir(config.dataDir, { recursive: true });
+  } catch (err: any) {
+    logger.warn('Could not create dataDir', { path: config.dataDir, error: err.message });
+  }
+  try {
+    await fs.mkdir(config.snapshotsDir, { recursive: true });
+  } catch (err: any) {
+    logger.warn('Could not create snapshotsDir', { path: config.snapshotsDir, error: err.message });
+  }
 }
+
 
 export async function readLatestSnapshot(): Promise<string> {
   try {
@@ -50,31 +59,44 @@ export interface SnapshotTree {
 }
 
 export async function getSnapshotTree(): Promise<SnapshotTree> {
-  try {
-    const dateEntries = await fs.readdir(config.snapshotsDir, { withFileTypes: true });
-    const dateFolders = dateEntries
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-      .sort((a, b) => b.localeCompare(a));
+  const foldersMap = new Map<string, Set<string>>();
 
-    const folders: SnapshotFolder[] = [];
-    for (const folderName of dateFolders) {
-      const folderPath = path.join(config.snapshotsDir, folderName);
-      const files = (await fs.readdir(folderPath, { withFileTypes: true }))
-        .filter((e) => e.isFile() && e.name.endsWith('.txt'))
-        .map((e) => e.name)
-        .sort((a, b) => b.localeCompare(a));
+  const scanDir = async (baseDir: string) => {
+    try {
+      const dateEntries = await fs.readdir(baseDir, { withFileTypes: true });
+      const dateFolders = dateEntries.filter((e) => e.isDirectory()).map((e) => e.name);
+      for (const folderName of dateFolders) {
+        const folderPath = path.join(baseDir, folderName);
+        const files = (await fs.readdir(folderPath, { withFileTypes: true }))
+          .filter((e) => e.isFile() && e.name.endsWith('.txt'))
+          .map((e) => e.name);
 
-      if (files.length > 0) {
-        folders.push({ date: folderName, files });
+        if (files.length > 0) {
+          if (!foldersMap.has(folderName)) foldersMap.set(folderName, new Set());
+          const set = foldersMap.get(folderName)!;
+          files.forEach((f) => set.add(f));
+        }
       }
+    } catch (err: any) {
+      logger.warn('Failed scanning snapshot dir', { baseDir, error: err.message });
     }
-    return { name: 'snapshots', folders };
-  } catch (err: any) {
-    logger.warn('Failed to read snapshot tree', { error: err.message });
-    return { name: 'snapshots', folders: [] };
+  };
+
+  const bundledDir = path.join(config.root, 'snapshots');
+  await scanDir(bundledDir);
+  if (config.snapshotsDir !== bundledDir) {
+    await scanDir(config.snapshotsDir);
   }
+
+  const sortedFolders = Array.from(foldersMap.keys()).sort((a, b) => b.localeCompare(a));
+  const folders: SnapshotFolder[] = sortedFolders.map((date) => ({
+    date,
+    files: Array.from(foldersMap.get(date)!).sort((a, b) => b.localeCompare(a)),
+  }));
+
+  return { name: 'snapshots', folders };
 }
+
 
 function parseNum(val: string): number {
   if (!val) return 0;
@@ -260,7 +282,13 @@ export async function readSnapshotFileData(date: string, filename: string): Prom
 }> {
   const filePath = path.join(config.snapshotsDir, date, filename);
   try {
-    const text = await fs.readFile(filePath, 'utf8');
+    let text: string;
+    try {
+      text = await fs.readFile(filePath, 'utf8');
+    } catch {
+      const fallbackPath = path.join(config.root, 'snapshots', date, filename);
+      text = await fs.readFile(fallbackPath, 'utf8');
+    }
     const parsed = parseSnapshotContent(text);
     return { ...parsed, date, filename };
   } catch (err: any) {
@@ -273,20 +301,37 @@ export async function deleteSnapshotFile(date: string, filename: string): Promis
   const folderPath = path.join(config.snapshotsDir, date);
   const filePath = path.join(folderPath, filename);
   try {
-    await fs.unlink(filePath);
+    try {
+      await fs.unlink(filePath);
+    } catch (err: any) {
+      if (err.code === 'ENOENT') {
+        const bundledPath = path.join(config.root, 'snapshots', date, filename);
+        await fs.unlink(bundledPath);
+      } else {
+        throw err;
+      }
+    }
     logger.info('Deleted snapshot file', { date, filename });
 
-    const remaining = await fs.readdir(folderPath);
-    if (remaining.length === 0) {
-      await fs.rmdir(folderPath);
-      logger.info('Removed empty snapshot folder', { date });
+    try {
+      const remaining = await fs.readdir(folderPath);
+      if (remaining.length === 0) {
+        await fs.rmdir(folderPath);
+        logger.info('Removed empty snapshot folder', { date });
+      }
+    } catch {
+      // Ignore directory cleanup errors in serverless
     }
     return { ok: true };
   } catch (err: any) {
     logger.error('Failed to delete snapshot file', { date, filename, error: err.message });
+    if (err.code === 'EROFS') {
+      throw new Error(`Cannot delete pre-packaged deployment snapshot in read-only environment: ${filename}`);
+    }
     throw new Error(`Failed to delete snapshot file: ${err.message}`);
   }
 }
+
 
 export function parseSnapshotContent(text: string): {
   hasSnapshot: boolean;

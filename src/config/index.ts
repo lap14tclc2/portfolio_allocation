@@ -26,19 +26,23 @@ export interface Config {
   };
 }
 
+const isVercel = Boolean(process.env.VERCEL || process.env.NOW_REGION);
+const WRITABLE_ROOT = isVercel ? '/tmp' : ROOT;
+
 export const config: Config = {
   root: ROOT,
   dataDir: path.join(ROOT, 'data'),
-  snapshotsDir: path.join(ROOT, 'snapshots'),
-  outputFile: path.join(ROOT, 'output.json'),
-  outputHistoryFile: path.join(ROOT, 'data', 'output-history.json'),
-  annualTargetFile: path.join(ROOT, 'data', 'annual-target.json'),
-  portfolioStateFile: path.join(ROOT, 'data', 'portfolio-state.json'),
-  suggestionsFile: path.join(ROOT, 'data', 'suggestions.json'),
-  eventLogFile: path.join(ROOT, 'data', 'event.log'),
+  snapshotsDir: path.join(WRITABLE_ROOT, 'snapshots'),
+  outputFile: path.join(WRITABLE_ROOT, 'output.json'),
+  outputHistoryFile: path.join(WRITABLE_ROOT, 'data', 'output-history.json'),
+  annualTargetFile: path.join(WRITABLE_ROOT, 'data', 'annual-target.json'),
+  portfolioStateFile: path.join(WRITABLE_ROOT, 'data', 'portfolio-state.json'),
+  suggestionsFile: path.join(WRITABLE_ROOT, 'data', 'suggestions.json'),
+  eventLogFile: path.join(WRITABLE_ROOT, 'data', 'event.log'),
   port: Number(process.env.PORT) || 3000,
   erc: { annualizationFactor: 252, minimumObservations: 60, lookbackYears: 5 },
   bands: { normal: 0.1, soft: 0.2 },
 };
+
 
 export default config;
