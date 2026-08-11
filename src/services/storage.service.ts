@@ -583,12 +583,20 @@ export async function saveSnapshot(
 }
 
 export async function readHistory(ticker: string): Promise<string> {
-  return fs.readFile(`${config.dataDir}/${ticker}.csv`, 'utf8');
+  const filePath = path.join(config.dataDir, `${ticker}.csv`);
+  try {
+    return await fs.readFile(filePath, 'utf8');
+  } catch (err: any) {
+    const bundledPath = path.join(config.root, 'data', `${ticker}.csv`);
+    return await fs.readFile(bundledPath, 'utf8');
+  }
 }
 
 export async function writeHistory(ticker: string, text: string): Promise<void> {
-  await fs.writeFile(`${config.dataDir}/${ticker}.csv`, text, 'utf8');
+  await fs.mkdir(config.dataDir, { recursive: true });
+  await fs.writeFile(path.join(config.dataDir, `${ticker}.csv`), text, 'utf8');
 }
+
 
 export async function readOutputHistory(): Promise<any[]> {
   try {

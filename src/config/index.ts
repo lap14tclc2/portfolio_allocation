@@ -31,7 +31,7 @@ const WRITABLE_ROOT = isVercel ? '/tmp' : ROOT;
 
 export const config: Config = {
   root: ROOT,
-  dataDir: path.join(ROOT, 'data'),
+  dataDir: path.join(WRITABLE_ROOT, 'data'),
   snapshotsDir: path.join(WRITABLE_ROOT, 'snapshots'),
   outputFile: path.join(WRITABLE_ROOT, 'output.json'),
   outputHistoryFile: path.join(WRITABLE_ROOT, 'data', 'output-history.json'),
@@ -43,6 +43,7 @@ export const config: Config = {
   erc: { annualizationFactor: 252, minimumObservations: 60, lookbackYears: 5 },
   bands: { normal: 0.1, soft: 0.2 },
 };
+
 
 
 export default config;
