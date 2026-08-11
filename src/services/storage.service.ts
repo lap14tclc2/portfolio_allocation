@@ -1,13 +1,20 @@
-'use strict';
-
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import logger from '../utils/logger';
 import config from '../config';
 import { Stock, AnnualTarget, PortfolioState } from '../types';
 import { latestStocks } from './backlog.service';
+import postgresStore from './postgres-store.service';
+import memoryStore from './memory-store.service';
+
+const isVercel = Boolean(process.env.VERCEL || process.env.NOW_REGION);
+
 
 export async function initialize(): Promise<void> {
+  if (isVercel) {
+    await postgresStore.initialize();
+    return;
+  }
   try {
     await fs.mkdir(config.dataDir, { recursive: true });
   } catch (err: any) {
@@ -20,8 +27,15 @@ export async function initialize(): Promise<void> {
   }
 }
 
-
 export async function readLatestSnapshot(): Promise<string> {
+  if (isVercel) {
+    const dbSnaps = await postgresStore.getSnapshots();
+    if (dbSnaps.length > 0) return dbSnaps[0].text;
+
+    const memSnaps = memoryStore.getSnapshots();
+    if (memSnaps.length > 0) return memSnaps[0].text;
+  }
+
   const dirs = [config.snapshotsDir];
   const bundledDir = path.join(config.root, 'snapshots');
   if (config.snapshotsDir !== bundledDir) {
@@ -56,7 +70,6 @@ export async function readLatestSnapshot(): Promise<string> {
   return '';
 }
 
-
 export interface SnapshotFolder {
   date: string;
   files: string[];
@@ -69,6 +82,19 @@ export interface SnapshotTree {
 
 export async function getSnapshotTree(): Promise<SnapshotTree> {
   const foldersMap = new Map<string, Set<string>>();
+
+  if (isVercel) {
+    const dbSnaps = await postgresStore.getSnapshots();
+    for (const snap of dbSnaps) {
+      if (!foldersMap.has(snap.date)) foldersMap.set(snap.date, new Set());
+      foldersMap.get(snap.date)!.add(snap.name);
+    }
+
+    for (const mem of memoryStore.getSnapshots()) {
+      if (!foldersMap.has(mem.date)) foldersMap.set(mem.date, new Set());
+      foldersMap.get(mem.date)!.add(mem.name);
+    }
+  }
 
   const scanDir = async (baseDir: string) => {
     try {
@@ -93,7 +119,7 @@ export async function getSnapshotTree(): Promise<SnapshotTree> {
 
   const bundledDir = path.join(config.root, 'snapshots');
   await scanDir(bundledDir);
-  if (config.snapshotsDir !== bundledDir) {
+  if (!isVercel && config.snapshotsDir !== bundledDir) {
     await scanDir(config.snapshotsDir);
   }
 
@@ -105,6 +131,7 @@ export async function getSnapshotTree(): Promise<SnapshotTree> {
 
   return { name: 'snapshots', folders };
 }
+
 
 
 function parseNum(val: string): number {
@@ -289,6 +316,20 @@ export async function readSnapshotFileData(date: string, filename: string): Prom
   date: string;
   filename: string;
 }> {
+  if (isVercel) {
+    const dbSnap = await postgresStore.getSnapshot(date, filename);
+    if (dbSnap) {
+      const parsed = parseSnapshotContent(dbSnap.text);
+      return { ...parsed, date, filename };
+    }
+
+    const memSnap = memoryStore.getSnapshot(date, filename);
+    if (memSnap) {
+      const parsed = parseSnapshotContent(memSnap.text);
+      return { ...parsed, date, filename };
+    }
+  }
+
   const filePath = path.join(config.snapshotsDir, date, filename);
   try {
     let text: string;
@@ -307,6 +348,12 @@ export async function readSnapshotFileData(date: string, filename: string): Prom
 }
 
 export async function deleteSnapshotFile(date: string, filename: string): Promise<{ ok: boolean }> {
+  if (isVercel) {
+    const deletedDb = await postgresStore.deleteSnapshot(date, filename);
+    const deletedMem = memoryStore.deleteSnapshot(date, filename);
+    if (deletedDb || deletedMem) return { ok: true };
+  }
+
   const folderPath = path.join(config.snapshotsDir, date);
   const filePath = path.join(folderPath, filename);
   try {
@@ -340,6 +387,7 @@ export async function deleteSnapshotFile(date: string, filename: string): Promis
     throw new Error(`Failed to delete snapshot file: ${err.message}`);
   }
 }
+
 
 
 export function parseSnapshotContent(text: string): {
@@ -570,6 +618,14 @@ export async function saveSnapshot(
   const latest = await readLatestSnapshotPathAndData();
   if (latest.filePath && latest.hasSnapshot && isSameSnapshotInput(stocks, cashReserve, latest.stocks, latest.cashReserve)) {
     const block = buildSnapshotText(stocks, fullOutput, dateIso, cashReserve);
+    if (isVercel) {
+      const d = new Date(dateIso);
+      const dateStr = d.toISOString().split('T')[0];
+      const name = path.basename(latest.filePath);
+      await postgresStore.addSnapshot(dateStr, name, block + '\n');
+      memoryStore.addSnapshot(dateStr, name, block + '\n');
+      return latest.filePath;
+    }
     try {
       await fs.writeFile(latest.filePath, block + '\n', 'utf8');
       logger.info('Overwrote existing snapshot record (no parameter changes)', { path: latest.filePath });
@@ -578,7 +634,6 @@ export async function saveSnapshot(
       // Fall through to write new file in writable config.snapshotsDir
     }
   }
-
 
   const d = new Date(dateIso);
   const dateStr = d.toISOString().split('T')[0];
@@ -589,19 +644,34 @@ export async function saveSnapshot(
 
   const tickersStr = stocks.map((s) => s.ticker.toUpperCase()).filter(Boolean).join('_') || 'SNAPSHOT';
   const snapshotName = `${tickersStr}_${timeStr}.txt`;
+  const block = buildSnapshotText(stocks, fullOutput, dateIso, cashReserve);
+
+  if (isVercel) {
+    await postgresStore.addSnapshot(dateStr, snapshotName, block + '\n');
+    memoryStore.addSnapshot(dateStr, snapshotName, block + '\n');
+    const dbPath = `${dateStr}/${snapshotName}`;
+    logger.info('Snapshot record saved to Postgres Database', { name: snapshotName });
+    return dbPath;
+  }
 
   const dateFolder = path.join(config.snapshotsDir, dateStr);
   await fs.mkdir(dateFolder, { recursive: true });
 
-  const block = buildSnapshotText(stocks, fullOutput, dateIso, cashReserve);
-
   const filePath = path.join(dateFolder, snapshotName);
   await fs.writeFile(filePath, block + '\n', 'utf8');
-  logger.info('Snapshot record saved', { path: filePath, name: snapshotName });
+  logger.info('Snapshot record saved to filesystem', { path: filePath, name: snapshotName });
   return filePath;
 }
 
 export async function readHistory(ticker: string): Promise<string> {
+  if (isVercel) {
+    const dbText = await postgresStore.getHistory(ticker);
+    if (dbText) return dbText;
+
+    const memText = memoryStore.getHistory(ticker);
+    if (memText) return memText;
+  }
+
   const filePath = path.join(config.dataDir, `${ticker}.csv`);
   try {
     return await fs.readFile(filePath, 'utf8');
@@ -612,9 +682,15 @@ export async function readHistory(ticker: string): Promise<string> {
 }
 
 export async function writeHistory(ticker: string, text: string): Promise<void> {
+  if (isVercel) {
+    await postgresStore.setHistory(ticker, text);
+    memoryStore.setHistory(ticker, text);
+    return;
+  }
   await fs.mkdir(config.dataDir, { recursive: true });
   await fs.writeFile(path.join(config.dataDir, `${ticker}.csv`), text, 'utf8');
 }
+
 
 
 export async function readOutputHistory(): Promise<any[]> {

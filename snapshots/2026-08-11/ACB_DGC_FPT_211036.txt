@@ -1,0 +1,48 @@
+===================================
+SNAPSHOT
+Date: 2026-08-11T14:10:36.774Z
+CashReserve: 50000000
+
+--- 1. TICKER INPUT DATA ---
+Stock: ACB
+  Cost: 19760
+  Shares: 19210
+  Price: 22650
+Stock: DGC
+  Cost: 52760
+  Shares: 10000
+  Price: 43600
+Stock: FPT
+  Cost: 73800
+  Shares: 3000
+  Price: 71800
+
+--- 2. HISTORY DATA VALIDATION ---
+Validation_ACB: Status=PASS, Details=Ready
+Validation_DGC: Status=PASS, Details=Ready
+Validation_FPT: Status=PASS, Details=Ready
+
+--- 3. ERC ANNUAL ALLOCATION ---
+AllocationYear: 2026
+TargetStatus: UNLOCKED
+Applicability: VALID
+RiskWindow: [object Object]
+Observations: 1066
+PortfolioRisk: 0.00%
+ERCValidation: PASS
+
+--- 4. SHANNON REBALANCING ---
+TotalNAV: 0
+EquityNAV: 0
+CashReserve: 50,000,000
+CashDeployed: 0
+RemainingCash: 0
+HardBank: 0
+
+--- JSON_OUTPUT ---
+{
+  "results": [],
+  "cashReserve": 50000000
+}
+
+===================================
