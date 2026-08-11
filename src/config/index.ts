@@ -2,7 +2,7 @@
 
 import path from 'node:path';
 
-const ROOT = path.resolve(__dirname, '..', '..');
+const ROOT = process.env.VERCEL ? process.cwd() : path.resolve(__dirname, '..', '..');
 
 export interface Config {
   root: string;
