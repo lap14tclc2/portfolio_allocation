@@ -378,13 +378,9 @@ export async function readLatestSnapshotData(): Promise<{
     return { hasSnapshot: false, stocks: [], cashReserve: 0, fullOutput: null };
   }
 
-  const parsed = parseSnapshotContent(text);
-  if (!parsed.fullOutput) {
-    parsed.fullOutput = await readOutput();
-  }
-
-  return parsed;
+  return parseSnapshotContent(text);
 }
+
 
 function buildSnapshotHeaderSection(stocks: Stock[], dateIso: string, cashReserve: number): string[] {
   const lines: string[] = [];
@@ -637,9 +633,6 @@ export async function writeOutput(result: any): Promise<void> {
 }
 
 export async function readOutput(): Promise<any> {
-  const data = await readLatestSnapshotData();
-  if (data.fullOutput) return data.fullOutput;
-
   try {
     const text = await fs.readFile(config.outputFile, 'utf8');
     return JSON.parse(text);
@@ -647,6 +640,7 @@ export async function readOutput(): Promise<any> {
     return null;
   }
 }
+
 
 export async function readAnnualTarget(): Promise<AnnualTarget | null> {
   try {
