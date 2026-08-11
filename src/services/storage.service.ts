@@ -429,7 +429,30 @@ export async function readLatestSnapshotData(): Promise<{
   stocks: Stock[];
   cashReserve: number;
   fullOutput: any | null;
+  date?: string;
+  filename?: string;
 }> {
+  const latestPathData = await readLatestSnapshotPathAndData();
+  if (latestPathData && latestPathData.hasSnapshot) {
+    let date = '';
+    let filename = '';
+    if (latestPathData.filePath) {
+      const parts = latestPathData.filePath.split(/[/\\]/);
+      if (parts.length >= 2) {
+        date = parts[parts.length - 2];
+        filename = parts[parts.length - 1];
+      }
+    }
+    return {
+      hasSnapshot: true,
+      stocks: latestPathData.stocks,
+      cashReserve: latestPathData.cashReserve,
+      fullOutput: latestPathData.fullOutput,
+      date,
+      filename,
+    };
+  }
+
   const text = await readLatestSnapshot();
   if (!text || !text.trim()) {
     return { hasSnapshot: false, stocks: [], cashReserve: 0, fullOutput: null };
@@ -437,6 +460,7 @@ export async function readLatestSnapshotData(): Promise<{
 
   return parseSnapshotContent(text);
 }
+
 
 
 function buildSnapshotHeaderSection(stocks: Stock[], dateIso: string, cashReserve: number): string[] {

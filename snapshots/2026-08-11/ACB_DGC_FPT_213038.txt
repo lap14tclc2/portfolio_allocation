@@ -1,7 +1,7 @@
 ===================================
 SNAPSHOT
-Date: 2026-08-11T14:30:38.853Z
-CashReserve: 50000000
+Date: 2026-08-11T14:30:38.856Z
+CashReserve: 20000
 
 --- 1. TICKER INPUT DATA ---
 Stock: ACB
@@ -30,39 +30,39 @@ RiskWindow: 2021-01-01 -> 2025-12-31
 Observations: 1066
 PortfolioRisk: 23.96%
 ERCValidation: PASS
-ERC_ACB: CurrentWeight=38.28%, AnnualTarget=39.42%, Volatility=26.02%, RiskContribution=33.33%, Drift=-1.14%
-ERC_DGC: CurrentWeight=38.36%, AnnualTarget=24.82%, Volatility=42.19%, RiskContribution=33.33%, Drift=13.54%
-ERC_FPT: CurrentWeight=18.95%, AnnualTarget=35.76%, Volatility=27.49%, RiskContribution=33.33%, Drift=-16.80%
+ERC_ACB: CurrentWeight=40.05%, AnnualTarget=39.42%, Volatility=26.02%, RiskContribution=33.33%, Drift=0.62%
+ERC_DGC: CurrentWeight=40.13%, AnnualTarget=24.82%, Volatility=42.19%, RiskContribution=33.33%, Drift=15.30%
+ERC_FPT: CurrentWeight=19.82%, AnnualTarget=35.76%, Volatility=27.49%, RiskContribution=33.33%, Drift=-15.93%
 
 --- 4. SHANNON REBALANCING ---
-TotalNAV: 1,136,506,500
+TotalNAV: 1,086,526,500
 EquityNAV: 1,086,506,500
-CashReserve: 50,000,000
-CashDeployed: 37,083,456.71
-RemainingCash: 12,916,543.29
-HardBank: 153,880,666.76
-SHANNON_ACB: Value=435,106,500, CurrentWeight=38.28%, Target=39.42%, NormalBand=35.48%-43.36%, Status=NORMAL, Drift=-1.14%, Recommendation=HOLD, TargetTradeAmount=0, FundedTradeAmount=0, SharesToTrade=0, ExpectedWeight=38.28%
-SHANNON_DGC: Value=436,000,000, CurrentWeight=38.36%, Target=24.82%, NormalBand=22.34%-27.31%, Status=HARD, Drift=13.54%, Recommendation=SELL, TargetTradeAmount=153,880,666.76, FundedTradeAmount=153,880,666.76, SharesToTrade=3529, ExpectedWeight=24.82%
-SHANNON_FPT: Value=215,400,000, CurrentWeight=18.95%, Target=35.76%, NormalBand=32.18%-39.33%, Status=HARD, Drift=-16.80%, Recommendation=BUY, TargetTradeAmount=190,964,123.47, FundedTradeAmount=190,964,123.47, SharesToTrade=2660, ExpectedWeight=35.76%
+CashReserve: 20,000
+CashDeployed: 20,000
+RemainingCash: 0
+HardBank: 166,287,392.35
+SHANNON_ACB: Value=435,106,500, CurrentWeight=40.05%, Target=39.42%, NormalBand=35.48%-43.36%, Status=NORMAL, Drift=0.62%, Recommendation=HOLD, TargetTradeAmount=0, FundedTradeAmount=0, SharesToTrade=0, ExpectedWeight=40.05%
+SHANNON_DGC: Value=436,000,000, CurrentWeight=40.13%, Target=24.82%, NormalBand=22.34%-27.31%, Status=HARD, Drift=15.30%, Recommendation=SELL, TargetTradeAmount=166,287,392.35, FundedTradeAmount=166,287,392.35, SharesToTrade=3814, ExpectedWeight=24.82%
+SHANNON_FPT: Value=215,400,000, CurrentWeight=19.82%, Target=35.76%, NormalBand=32.18%-39.33%, Status=HARD, Drift=-15.93%, Recommendation=BUY, TargetTradeAmount=173,093,500.74, FundedTradeAmount=166,307,392.35, SharesToTrade=2316, ExpectedWeight=35.13%
 
 --- 5. PORTFOLIO STATE (LAYER 2) — RESULT AFTER ALLOCATION ---
-StateTotalNAV: 1,136,546,643.29
-StateEquityNAV: 1,123,630,100
-StateCashReserve: 12,916,543.29
-STATE_ACB: InitialShares=19210, Action=HOLD, TradeShares=0, ExecutedShares=19210, Price=22,650, ExecutedMarketValue=435,106,500, ExecutedWeight=38.28%, ERCTarget=39.42%
-STATE_DGC: InitialShares=10000, Action=SELL, TradeShares=3529, ExecutedShares=6471, Price=43,600, ExecutedMarketValue=282,135,600, ExecutedWeight=24.82%, ERCTarget=24.82%
-STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660, Price=71,800, ExecutedMarketValue=406,388,000, ExecutedWeight=35.76%, ERCTarget=35.76%
+StateTotalNAV: 1,086,504,900
+StateEquityNAV: 1,086,504,900
+StateCashReserve: 0
+STATE_ACB: InitialShares=19210, Action=HOLD, TradeShares=0, ExecutedShares=19210, Price=22,650, ExecutedMarketValue=435,106,500, ExecutedWeight=40.05%, ERCTarget=39.42%
+STATE_DGC: InitialShares=10000, Action=SELL, TradeShares=3814, ExecutedShares=6186, Price=43,600, ExecutedMarketValue=269,709,600, ExecutedWeight=24.82%, ERCTarget=24.82%
+STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2316, ExecutedShares=5316, Price=71,800, ExecutedMarketValue=381,688,800, ExecutedWeight=35.13%, ERCTarget=35.76%
 
 --- JSON_OUTPUT ---
 {
-  "generatedAt": "2026-08-11T14:30:38.812Z",
-  "nav": 1136506500,
+  "generatedAt": "2026-08-11T14:30:38.856Z",
+  "nav": 1086526500,
   "equityNav": 1086506500,
-  "cashReserve": 50000000,
-  "cashDeployed": 37083456.71410555,
-  "remainingCash": 12916543.285894454,
-  "hardBank": 153880666.75988138,
-  "fundedBuyTotal": 190964123.47398692,
+  "cashReserve": 20000,
+  "cashDeployed": 20000,
+  "remainingCash": 0,
+  "hardBank": 166287392.34864056,
+  "fundedBuyTotal": 166307392.34864056,
   "annualTarget": {
     "year": 2026,
     "allocationDate": "2026-01-01",
@@ -70,32 +70,9 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
       "start": "2021-01-01",
       "end": "2025-12-31"
     },
-    "method": "ERC",
-    "targets": {
-      "ACB": 0.39421071792013035,
-      "DGC": 0.2482338052973024,
-      "FPT": 0.3575554767825674
-    },
-    "locked": true,
-    "createdAt": "2026-08-11T14:30:38.852Z",
-    "diagnostics": {
-      "valid": true,
-      "observations": 1066,
-      "dateRange": {
-        "start": "2021-08-16",
-        "end": "2025-12-31"
-      },
-      "riskWindow": {
-        "start": "2021-01-01",
-        "end": "2025-12-31"
-      },
-      "portfolioRisk": 0.2396084509126425,
-      "portfolioVariance": 0.0574122097487562,
-      "weightSum": 1,
-      "crcSum": 0.2396084509126425,
-      "rcSum": 1,
-      "ercError": 8.859531569482826e-8
-    }
+    "status": "LOCKED",
+    "targetSource": "Annual ERC Target",
+    "applicability": "VALID"
   },
   "erc": {
     "weights": [
@@ -141,7 +118,7 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
       "currentShares": 19210,
       "currentPrice": 22650,
       "value": 435106500,
-      "currentWeight": 0.3828455886525946,
+      "currentWeight": 0.4004564085643562,
       "ercWeight": 0.39421071792013035,
       "volatility": 0.2601792508333572,
       "riskContribution": 0.3333333050970052,
@@ -154,14 +131,14 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
         "upper": 0.4730528615041564
       },
       "band": "NORMAL",
-      "drift": -0.011365129267535745,
+      "drift": 0.006245690644225865,
       "recommendation": "HOLD",
       "targetTradeAmount": 0,
       "active": true,
       "fundedTradeAmount": 0,
       "sharesToTrade": 0,
       "expectedValue": 435106500,
-      "expectedWeight": 0.3828455886525946
+      "expectedWeight": 0.4004564085643562
     },
     {
       "ticker": "DGC",
@@ -169,7 +146,7 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
       "currentShares": 10000,
       "currentPrice": 43600,
       "value": 436000000,
-      "currentWeight": 0.383631769813899,
+      "currentWeight": 0.4012787539006182,
       "ercWeight": 0.2482338052973024,
       "volatility": 0.42194223565938,
       "riskContribution": 0.333333421928649,
@@ -182,13 +159,13 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
         "upper": 0.29788056635676285
       },
       "band": "HARD",
-      "drift": 0.1353979645165966,
+      "drift": 0.15304494860331577,
       "recommendation": "SELL",
-      "targetTradeAmount": 153880666.75988138,
+      "targetTradeAmount": 166287392.34864056,
       "active": true,
-      "fundedTradeAmount": 153880666.75988138,
-      "sharesToTrade": 3529.3730908229672,
-      "expectedValue": 282119333.2401186,
+      "fundedTradeAmount": 166287392.34864056,
+      "sharesToTrade": 3813.931017170655,
+      "expectedValue": 269712607.65135944,
       "expectedWeight": 0.2482338052973024
     },
     {
@@ -197,7 +174,7 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
       "currentShares": 3000,
       "currentPrice": 71800,
       "value": 215400000,
-      "currentWeight": 0.18952817251815102,
+      "currentWeight": 0.19824643025273658,
       "ercWeight": 0.3575554767825674,
       "volatility": 0.2748584455014581,
       "riskContribution": 0.33333327297434573,
@@ -210,14 +187,14 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
         "upper": 0.42906657213908084
       },
       "band": "HARD",
-      "drift": -0.16802730426441637,
+      "drift": -0.1593090465298308,
       "recommendation": "BUY",
-      "targetTradeAmount": 190964123.47398692,
+      "targetTradeAmount": 173093500.74439418,
       "active": true,
-      "fundedTradeAmount": 190964123.47398692,
-      "sharesToTrade": 2659.667457854971,
-      "expectedValue": 406364123.4739869,
-      "expectedWeight": 0.3575554767825674
+      "fundedTradeAmount": 166307392.34864056,
+      "sharesToTrade": 2316.2589463598965,
+      "expectedValue": 381707392.34864056,
+      "expectedWeight": 0.35130978613834135
     }
   ],
   "inputs": [
@@ -241,10 +218,10 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
     }
   ],
   "portfolioState": {
-    "updatedAt": "2026-08-11T14:30:38.812Z",
-    "totalNav": 1136546643.2858944,
-    "equityNav": 1123630100,
-    "cashReserve": 12916543.285894454,
+    "updatedAt": "2026-08-11T14:30:38.856Z",
+    "totalNav": 1086504900,
+    "equityNav": 1086504900,
+    "cashReserve": 0,
     "holdings": [
       {
         "ticker": "ACB",
@@ -252,7 +229,7 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
         "price": 22650,
         "averageCost": 19760,
         "marketValue": 435106500,
-        "weight": 0.38283206639197337,
+        "weight": 0.4004643697419128,
         "active": true,
         "initialShares": 19210,
         "action": "HOLD",
@@ -261,28 +238,28 @@ STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=2660, ExecutedShares=5660
       },
       {
         "ticker": "DGC",
-        "shares": 6471,
+        "shares": 6186,
         "price": 43600,
         "averageCost": 52760,
-        "marketValue": 282135600,
-        "weight": 0.2482393500229007,
+        "marketValue": 269709600,
+        "weight": 0.24823597206050335,
         "active": true,
         "initialShares": 10000,
         "action": "SELL",
-        "tradeShares": 3529,
+        "tradeShares": 3814,
         "ercTargetWeight": 0.2482338052973024
       },
       {
         "ticker": "FPT",
-        "shares": 5660,
+        "shares": 5316,
         "price": 71800,
         "averageCost": 73800,
-        "marketValue": 406388000,
-        "weight": 0.3575638557385405,
+        "marketValue": 381688800,
+        "weight": 0.35129965819758385,
         "active": true,
         "initialShares": 3000,
         "action": "BUY",
-        "tradeShares": 2660,
+        "tradeShares": 2316,
         "ercTargetWeight": 0.3575554767825674
       }
     ]
