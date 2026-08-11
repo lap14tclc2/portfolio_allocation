@@ -2,8 +2,9 @@
   "version": 2,
   "functions": {
     "api/index.ts": {
-      "includeFiles": "index.html"
+      "includeFiles": "{index.html,src/client/**}"
     }
+
   },
   "rewrites": [
     {

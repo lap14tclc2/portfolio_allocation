@@ -44,7 +44,12 @@ async function handleServeClientAsset(pathname: string, res: ServerResponse): Pr
 
   try {
     if (relativePath.endsWith('.css')) {
-      const css = await fs.readFile(targetPath, 'utf8');
+      let css: string;
+      try {
+        css = await fs.readFile(targetPath, 'utf8');
+      } catch {
+        css = await fs.readFile(path.join(process.cwd(), 'src', 'client', relativePath), 'utf8');
+      }
       res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
       res.end(css);
       return;
@@ -54,7 +59,14 @@ async function handleServeClientAsset(pathname: string, res: ServerResponse): Pr
       targetPath = targetPath.replace(/\.js$/, '') + '.ts';
     }
 
-    const tsSource = await fs.readFile(targetPath, 'utf8');
+    let tsSource: string;
+    try {
+      tsSource = await fs.readFile(targetPath, 'utf8');
+    } catch {
+      const tsRelative = relativePath.endsWith('.ts') ? relativePath : relativePath.replace(/\.js$/, '') + '.ts';
+      tsSource = await fs.readFile(path.join(process.cwd(), 'src', 'client', tsRelative), 'utf8');
+    }
+
     const jsOutput = ts.transpileModule(tsSource, {
       compilerOptions: {
         module: ts.ModuleKind.ESNext,
@@ -64,6 +76,7 @@ async function handleServeClientAsset(pathname: string, res: ServerResponse): Pr
 
     res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
     res.end(jsOutput);
+
   } catch (err: any) {
     logger.error('Client asset request failed', { url: pathname, targetPath, error: err.message });
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
