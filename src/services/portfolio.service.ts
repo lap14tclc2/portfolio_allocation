@@ -19,9 +19,22 @@ export async function resolveAnnualTarget(
   const existing = await storage.readAnnualTarget();
 
   if (existing && existing.locked && existing.year === year) {
-    logger.info('Using locked annual target', { year });
-    return { target: existing, freshERC: false };
+    const existingTickers = Object.keys(existing.targets || {}).sort();
+    const currentTickers = stocks.map((s) => s.ticker.toUpperCase()).sort();
+    const isSameTickers =
+      existingTickers.length === currentTickers.length &&
+      existingTickers.every((t, i) => t === currentTickers[i]);
+
+    if (isSameTickers) {
+      logger.info('Using locked annual target', { year });
+      return { target: existing, freshERC: false };
+    }
+    logger.info('Portfolio tickers changed; unlocking and recalculating annual target', {
+      existingTickers,
+      currentTickers,
+    });
   }
+
 
   logger.info('Calculating new ERC for annual target', { year });
   const erc = calculateERC(stocks, histories, year);
