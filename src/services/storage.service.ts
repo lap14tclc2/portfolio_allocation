@@ -94,7 +94,16 @@ export async function getSnapshotTree(): Promise<SnapshotTree> {
       if (!foldersMap.has(mem.date)) foldersMap.set(mem.date, new Set());
       foldersMap.get(mem.date)!.add(mem.name);
     }
+
+    const sortedFolders = Array.from(foldersMap.keys()).sort((a, b) => b.localeCompare(a));
+    const folders: SnapshotFolder[] = sortedFolders.map((date) => ({
+      date,
+      files: Array.from(foldersMap.get(date)!).sort((a, b) => b.localeCompare(a)),
+    }));
+
+    return { name: 'snapshots', folders };
   }
+
 
   const scanDir = async (baseDir: string) => {
     try {
@@ -669,9 +678,11 @@ export async function saveSnapshot(
   const secs = String(d.getSeconds()).padStart(2, '0');
   const timeStr = `${hours}${mins}${secs}`;
 
-  const tickersStr = stocks.map((s) => s.ticker.toUpperCase()).filter(Boolean).join('_') || 'SNAPSHOT';
+  const validTickers = stocks.map((s) => s.ticker ? s.ticker.toUpperCase() : '').filter(Boolean);
+  const tickersStr = validTickers.length > 0 ? validTickers.join('_') : 'SNAPSHOT';
   const snapshotName = `${tickersStr}_${timeStr}.txt`;
   const block = buildSnapshotText(stocks, fullOutput, dateIso, cashReserve);
+
 
   if (isVercel) {
     await postgresStore.addSnapshot(dateStr, snapshotName, block + '\n');

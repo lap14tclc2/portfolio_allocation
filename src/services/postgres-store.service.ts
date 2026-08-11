@@ -62,10 +62,72 @@ class PostgresStoreService {
       `);
       this.initialized = true;
       logger.info('Postgres store schema initialized successfully.');
+
+      await this.seedInitialDataFromFilesystem();
     } catch (err: any) {
       logger.warn('Failed to initialize Postgres schema', { error: err.message });
     }
   }
+
+  private async seedInitialDataFromFilesystem(): Promise<void> {
+    const pool = this.getPool();
+    if (!pool) return;
+
+    try {
+      const fs = await import('node:fs/promises');
+      const path = await import('node:path');
+      const rootDir = process.cwd();
+
+      // 1. Seed initial CSV history files into Postgres if missing
+      const dataDir = path.join(rootDir, 'data');
+      try {
+        const files = await fs.readdir(dataDir);
+        for (const file of files) {
+          if (file.endsWith('.csv')) {
+            const ticker = file.replace(/\.csv$/, '').toUpperCase();
+            const text = await fs.readFile(path.join(dataDir, file), 'utf8');
+            await pool.query(
+              `INSERT INTO history_files (ticker, text, updated_at)
+               VALUES ($1, $2, NOW())
+               ON CONFLICT (ticker) DO NOTHING;`,
+              [ticker, text]
+            );
+          }
+        }
+      } catch (err: any) {
+        logger.warn('Initial CSV history seed skipped or failed', { error: err.message });
+      }
+
+      // 2. Seed initial snapshots into Postgres if missing
+      const snapshotsDir = path.join(rootDir, 'snapshots');
+      try {
+        const dateFolders = await fs.readdir(snapshotsDir);
+        for (const folderName of dateFolders) {
+          const folderPath = path.join(snapshotsDir, folderName);
+          const stat = await fs.stat(folderPath);
+          if (stat.isDirectory()) {
+            const snapFiles = await fs.readdir(folderPath);
+            for (const snapFile of snapFiles) {
+              if (snapFile.endsWith('.txt')) {
+                const text = await fs.readFile(path.join(folderPath, snapFile), 'utf8');
+                await pool.query(
+                  `INSERT INTO snapshot_records (date_str, name, content, created_at)
+                   VALUES ($1, $2, $3, NOW())
+                   ON CONFLICT (name) DO NOTHING;`,
+                  [folderName, snapFile, text]
+                );
+              }
+            }
+          }
+        }
+      } catch (err: any) {
+        logger.warn('Initial snapshots seed skipped or failed', { error: err.message });
+      }
+    } catch (err: any) {
+      logger.warn('Filesystem to Postgres migration error', { error: err.message });
+    }
+  }
+
 
   public async setHistory(ticker: string, text: string): Promise<void> {
     const pool = this.getPool();
