@@ -566,6 +566,32 @@ export async function readLatestSnapshotPathAndData(): Promise<{
   cashReserve: number;
   fullOutput: any | null;
 }> {
+  if (isVercel) {
+    const dbSnaps = await postgresStore.getSnapshots();
+    if (dbSnaps.length > 0) {
+      const parsed = parseSnapshotContent(dbSnaps[0].text);
+      return {
+        filePath: `${dbSnaps[0].date}/${dbSnaps[0].name}`,
+        hasSnapshot: parsed.hasSnapshot,
+        stocks: parsed.stocks,
+        cashReserve: parsed.cashReserve,
+        fullOutput: parsed.fullOutput,
+      };
+    }
+
+    const memSnaps = memoryStore.getSnapshots();
+    if (memSnaps.length > 0) {
+      const parsed = parseSnapshotContent(memSnaps[0].text);
+      return {
+        filePath: `${memSnaps[0].date}/${memSnaps[0].name}`,
+        hasSnapshot: parsed.hasSnapshot,
+        stocks: parsed.stocks,
+        cashReserve: parsed.cashReserve,
+        fullOutput: parsed.fullOutput,
+      };
+    }
+  }
+
   const dirs = [config.snapshotsDir];
   const bundledDir = path.join(config.root, 'snapshots');
   if (config.snapshotsDir !== bundledDir) {
@@ -607,6 +633,7 @@ export async function readLatestSnapshotPathAndData(): Promise<{
 
   return { filePath: null, hasSnapshot: false, stocks: [], cashReserve: 0, fullOutput: null };
 }
+
 
 
 export async function saveSnapshot(
@@ -719,6 +746,14 @@ export async function readOutput(): Promise<any> {
 
 
 export async function readAnnualTarget(): Promise<AnnualTarget | null> {
+  if (isVercel) {
+    const dbTarget = await postgresStore.getAppState('annual_target');
+    if (dbTarget) return dbTarget as AnnualTarget;
+
+    const memTarget = memoryStore.getAnnualTarget();
+    if (memTarget) return memTarget as AnnualTarget;
+  }
+
   try {
     const data = await readLatestSnapshotData();
     if (data.fullOutput && data.fullOutput.annualTarget && data.fullOutput.annualTarget.year) {
@@ -737,6 +772,11 @@ export async function readAnnualTarget(): Promise<AnnualTarget | null> {
 }
 
 export async function writeAnnualTarget(target: AnnualTarget): Promise<void> {
+  if (isVercel) {
+    await postgresStore.setAppState('annual_target', target);
+    memoryStore.setAnnualTarget(target);
+  }
+
   const data = await readLatestSnapshotData();
   const stocks = data.stocks || [];
   const fullOutput = data.fullOutput || {};
@@ -745,6 +785,14 @@ export async function writeAnnualTarget(target: AnnualTarget): Promise<void> {
 }
 
 export async function readPortfolioState(): Promise<PortfolioState | null> {
+  if (isVercel) {
+    const dbState = await postgresStore.getAppState('portfolio_state');
+    if (dbState) return dbState as PortfolioState;
+
+    const memState = memoryStore.getPortfolioState();
+    if (memState) return memState as PortfolioState;
+  }
+
   try {
     const data = await readLatestSnapshotData();
     if (data.fullOutput && data.fullOutput.portfolioState) {
@@ -763,12 +811,18 @@ export async function readPortfolioState(): Promise<PortfolioState | null> {
 }
 
 export async function writePortfolioState(state: PortfolioState): Promise<void> {
+  if (isVercel) {
+    await postgresStore.setAppState('portfolio_state', state);
+    memoryStore.setPortfolioState(state);
+  }
+
   const data = await readLatestSnapshotData();
   const stocks = data.stocks || [];
   const fullOutput = data.fullOutput || {};
   fullOutput.portfolioState = state;
   await saveSnapshot(stocks, fullOutput, new Date().toISOString(), data.cashReserve);
 }
+
 
 export async function logUserAction(action: string, details: Record<string, any> = {}): Promise<void> {
   const timestamp = new Date().toISOString();
