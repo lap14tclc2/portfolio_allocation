@@ -522,39 +522,48 @@ export async function readLatestSnapshotPathAndData(): Promise<{
   cashReserve: number;
   fullOutput: any | null;
 }> {
-  try {
-    const dateEntries = await fs.readdir(config.snapshotsDir, { withFileTypes: true });
-    const dateFolders = dateEntries
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-      .sort((a, b) => b.localeCompare(a));
+  const dirs = [config.snapshotsDir];
+  const bundledDir = path.join(config.root, 'snapshots');
+  if (config.snapshotsDir !== bundledDir) {
+    dirs.push(bundledDir);
+  }
 
-    for (const folderName of dateFolders) {
-      const folderPath = path.join(config.snapshotsDir, folderName);
-      const files = (await fs.readdir(folderPath, { withFileTypes: true }))
-        .filter((e) => e.isFile() && e.name.endsWith('.txt'))
+  for (const baseDir of dirs) {
+    try {
+      const dateEntries = await fs.readdir(baseDir, { withFileTypes: true });
+      const dateFolders = dateEntries
+        .filter((e) => e.isDirectory())
         .map((e) => e.name)
         .sort((a, b) => b.localeCompare(a));
 
-      if (files.length > 0) {
-        const latestFilePath = path.join(folderPath, files[0]);
-        const text = await fs.readFile(latestFilePath, 'utf8');
-        const parsed = parseSnapshotContent(text);
-        return {
-          filePath: latestFilePath,
-          hasSnapshot: parsed.hasSnapshot,
-          stocks: parsed.stocks,
-          cashReserve: parsed.cashReserve,
-          fullOutput: parsed.fullOutput,
-        };
+      for (const folderName of dateFolders) {
+        const folderPath = path.join(baseDir, folderName);
+        const files = (await fs.readdir(folderPath, { withFileTypes: true }))
+          .filter((e) => e.isFile() && e.name.endsWith('.txt'))
+          .map((e) => e.name)
+          .sort((a, b) => b.localeCompare(a));
+
+        if (files.length > 0) {
+          const latestFilePath = path.join(folderPath, files[0]);
+          const text = await fs.readFile(latestFilePath, 'utf8');
+          const parsed = parseSnapshotContent(text);
+          return {
+            filePath: latestFilePath,
+            hasSnapshot: parsed.hasSnapshot,
+            stocks: parsed.stocks,
+            cashReserve: parsed.cashReserve,
+            fullOutput: parsed.fullOutput,
+          };
+        }
       }
+    } catch (err: any) {
+      logger.warn('Failed to read latest snapshot path', { baseDir, error: err.message });
     }
-  } catch (err: any) {
-    logger.warn('Failed to read latest snapshot path', { error: err.message });
   }
 
   return { filePath: null, hasSnapshot: false, stocks: [], cashReserve: 0, fullOutput: null };
 }
+
 
 export async function saveSnapshot(
   stocks: Stock[],
@@ -565,10 +574,15 @@ export async function saveSnapshot(
   const latest = await readLatestSnapshotPathAndData();
   if (latest.filePath && latest.hasSnapshot && isSameSnapshotInput(stocks, cashReserve, latest.stocks, latest.cashReserve)) {
     const block = buildSnapshotText(stocks, fullOutput, dateIso, cashReserve);
-    await fs.writeFile(latest.filePath, block + '\n', 'utf8');
-    logger.info('Overwrote existing snapshot record (no parameter changes)', { path: latest.filePath });
-    return latest.filePath;
+    try {
+      await fs.writeFile(latest.filePath, block + '\n', 'utf8');
+      logger.info('Overwrote existing snapshot record (no parameter changes)', { path: latest.filePath });
+      return latest.filePath;
+    } catch {
+      // Fall through to write new file in writable config.snapshotsDir
+    }
   }
+
 
   const d = new Date(dateIso);
   const dateStr = d.toISOString().split('T')[0];
