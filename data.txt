@@ -1,0 +1,63 @@
+===================================
+SNAPSHOT
+Date: 2026-08-10T13:24:30.120Z
+CashReserve: 20000000
+Stock: ACB
+  Cost: 19760
+  Shares: 19210
+  Price: 22650
+Stock: DGC
+  Cost: 52760
+  Shares: 10000
+  Price: 43600
+Stock: FPT
+  Cost: 73800
+  Shares: 3000
+  Price: 71800
+===================================
+
+===================================
+SNAPSHOT
+Date: 2026-08-10T13:24:19.422Z
+CashReserve: 0
+Stock: ACB
+  Cost: 19760
+  Shares: 19210
+  Price: 22650
+Stock: DGC
+  Cost: 52760
+  Shares: 10000
+  Price: 43600
+Stock: FPT
+  Cost: 73800
+  Shares: 3000
+  Price: 71800
+===================================
+
+===================================
+SNAPSHOT
+Date: 2026-08-10T13:23:59.543Z
+CashReserve: 0
+Stock: ACB
+  Cost: 19760
+  Shares: 19210
+  Price: 22650
+Stock: DGC
+  Cost: 52760
+  Shares: 10000
+  Price: 43600
+Stock: FPT
+  Cost: 73800
+  Shares: 3000
+  Price: 71800
+===================================
+
+===================================
+SNAPSHOT
+Date: 2026-08-10T13:23:14.340Z
+CashReserve: 0
+Stock: ACB
+  Cost: 19760
+  Shares: 19210
+  Price: 22650
+===================================

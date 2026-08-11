@@ -1,0 +1,350 @@
+===================================
+SNAPSHOT
+Date: 2026-08-10T15:08:30.784Z
+CashReserve: 10000000
+
+--- 1. TICKER INPUT DATA ---
+Stock: ACB
+  Cost: 19760
+  Shares: 19210
+  Price: 22650
+Stock: DGC
+  Cost: 52760
+  Shares: 10000
+  Price: 43600
+Stock: FPT
+  Cost: 73800
+  Shares: 3000
+  Price: 71800
+Stock: REE
+  Cost: 0
+  Shares: 0
+  Price: 48000
+
+--- 2. HISTORY DATA VALIDATION ---
+Validation_ACB: Status=PASS, Details=Ready
+Validation_DGC: Status=PASS, Details=Ready
+Validation_FPT: Status=PASS, Details=Ready
+Validation_REE: Status=PASS, Details=Ready
+
+--- 3. ERC ANNUAL ALLOCATION ---
+AllocationYear: 2026
+TargetStatus: LOCKED
+Applicability: VALID
+RiskWindow: 2021-01-01 -> 2025-12-31
+Observations: 1066
+PortfolioRisk: 23.38%
+ERCValidation: PASS
+ERC_ACB: CurrentWeight=39.68%, AnnualTarget=30.51%, Volatility=26.02%, RiskContribution=25.00%, Drift=9.17%
+ERC_DGC: CurrentWeight=39.76%, AnnualTarget=18.76%, Volatility=42.19%, RiskContribution=25.00%, Drift=21.00%
+ERC_FPT: CurrentWeight=19.64%, AnnualTarget=27.01%, Volatility=27.49%, RiskContribution=25.00%, Drift=-7.36%
+ERC_REE: CurrentWeight=0.00%, AnnualTarget=23.72%, Volatility=32.61%, RiskContribution=25.00%, Drift=-23.72%
+
+--- 4. SHANNON REBALANCING ---
+TotalNAV: 1,096,506,500
+EquityNAV: 1,086,506,500
+CashReserve: 10,000,000
+CashDeployed: 10,000,000
+RemainingCash: 0
+HardBank: 330,823,376.07
+SHANNON_ACB: Value=435,106,500, CurrentWeight=39.68%, Target=30.51%, NormalBand=27.46%-33.56%, Status=HARD, Drift=9.17%, Recommendation=SELL, TargetTradeAmount=100,561,505.66, FundedTradeAmount=100,561,505.66, SharesToTrade=4440, ExpectedWeight=30.51%
+SHANNON_DGC: Value=436,000,000, CurrentWeight=39.76%, Target=18.76%, NormalBand=16.89%-20.64%, Status=HARD, Drift=21.00%, Recommendation=SELL, TargetTradeAmount=230,261,870.41, FundedTradeAmount=230,261,870.41, SharesToTrade=5281, ExpectedWeight=18.76%
+SHANNON_FPT: Value=215,400,000, CurrentWeight=19.64%, Target=27.01%, NormalBand=24.31%-29.71%, Status=HARD, Drift=-7.36%, Recommendation=BUY, TargetTradeAmount=80,753,554.32, FundedTradeAmount=80,753,554.32, SharesToTrade=1125, ExpectedWeight=27.01%
+SHANNON_REE: Value=0, CurrentWeight=0.00%, Target=23.72%, NormalBand=21.35%-26.09%, Status=HARD, Drift=-23.72%, Recommendation=BUY, TargetTradeAmount=260,069,821.74, FundedTradeAmount=260,069,821.74, SharesToTrade=5418, ExpectedWeight=23.72%
+
+--- 5. PORTFOLIO STATE (LAYER 2) — RESULT AFTER ALLOCATION ---
+StateTotalNAV: 1,096,527,900
+StateEquityNAV: 1,096,527,900
+StateCashReserve: 0
+STATE_ACB: InitialShares=19210, Action=SELL, TradeShares=4440, ExecutedShares=14770, Price=22,650, ExecutedMarketValue=334,540,500, ExecutedWeight=30.51%, ERCTarget=30.51%
+STATE_DGC: InitialShares=10000, Action=SELL, TradeShares=5281, ExecutedShares=4719, Price=43,600, ExecutedMarketValue=205,748,400, ExecutedWeight=18.76%, ERCTarget=18.76%
+STATE_FPT: InitialShares=3000, Action=BUY, TradeShares=1125, ExecutedShares=4125, Price=71,800, ExecutedMarketValue=296,175,000, ExecutedWeight=27.01%, ERCTarget=27.01%
+STATE_REE: InitialShares=0, Action=BUY, TradeShares=5418, ExecutedShares=5418, Price=48,000, ExecutedMarketValue=260,064,000, ExecutedWeight=23.72%, ERCTarget=23.72%
+
+--- JSON_OUTPUT ---
+{
+  "generatedAt": "2026-08-10T15:07:26.699Z",
+  "nav": 1096506500,
+  "equityNav": 1086506500,
+  "cashReserve": 10000000,
+  "cashDeployed": 9999999.99999988,
+  "remainingCash": 1.1920928955078125e-7,
+  "hardBank": 330823376.0686817,
+  "fundedBuyTotal": 340823376.0686816,
+  "annualTarget": {
+    "year": 2026,
+    "allocationDate": "2026-01-01",
+    "riskWindow": {
+      "start": "2021-01-01",
+      "end": "2025-12-31"
+    },
+    "method": "ERC",
+    "targets": {
+      "ACB": 0.39421071792013035,
+      "DGC": 0.2482338052973024,
+      "FPT": 0.3575554767825674
+    },
+    "locked": true,
+    "createdAt": "2026-08-10T15:08:30.783Z",
+    "diagnostics": {
+      "valid": true,
+      "observations": 1066,
+      "dateRange": {
+        "start": "2021-08-16",
+        "end": "2025-12-31"
+      },
+      "riskWindow": {
+        "start": "2021-01-01",
+        "end": "2025-12-31"
+      },
+      "portfolioRisk": 0.2396084509126425,
+      "portfolioVariance": 0.0574122097487562,
+      "weightSum": 1,
+      "crcSum": 0.2396084509126425,
+      "rcSum": 1,
+      "ercError": 8.859531569482826e-8
+    }
+  },
+  "erc": {
+    "weights": [
+      0.30510078539381713,
+      0.18763056086935437,
+      0.2700882797538436,
+      0.23718037398298478
+    ],
+    "volatility": [
+      0.2601792508333572,
+      0.42194223565938,
+      0.2748584455014581,
+      0.326064366368386
+    ],
+    "riskContributions": [
+      0.24999997150169692,
+      0.2500000698280597,
+      0.24999996005740435,
+      0.249999998612839
+    ],
+    "portfolioRisk": 0.2338074267057408,
+    "observations": 1066,
+    "diagnostics": {
+      "valid": true,
+      "observations": 1066,
+      "dateRange": {
+        "start": "2021-08-16",
+        "end": "2025-12-31"
+      },
+      "riskWindow": {
+        "start": "2021-01-01",
+        "end": "2025-12-31"
+      },
+      "portfolioRisk": 0.2338074267057408,
+      "portfolioVariance": 0.05466591278276036,
+      "weightSum": 0.9999999999999998,
+      "crcSum": 0.23380742670574078,
+      "rcSum": 1,
+      "ercError": 6.982805972333139e-8
+    }
+  },
+  "results": [
+    {
+      "ticker": "ACB",
+      "averageCostBasis": 19760,
+      "currentShares": 19210,
+      "currentPrice": 22650,
+      "value": 435106500,
+      "currentWeight": 0.3968116012080184,
+      "ercWeight": 0.30510078539381713,
+      "volatility": 0.2601792508333572,
+      "riskContribution": 0.24999997150169692,
+      "normal": {
+        "lower": 0.27459070685443543,
+        "upper": 0.3356108639331989
+      },
+      "soft": {
+        "lower": 0.24408062831505373,
+        "upper": 0.36612094247258054
+      },
+      "band": "HARD",
+      "drift": 0.09171081581420126,
+      "recommendation": "SELL",
+      "targetTradeAmount": 100561505.66057444,
+      "active": true,
+      "fundedTradeAmount": 100561505.66057444,
+      "sharesToTrade": 4439.801574418298,
+      "expectedValue": 334544994.33942556,
+      "expectedWeight": 0.30510078539381713
+    },
+    {
+      "ticker": "DGC",
+      "averageCostBasis": 52760,
+      "currentShares": 10000,
+      "currentPrice": 43600,
+      "value": 436000000,
+      "currentWeight": 0.39762646185863926,
+      "ercWeight": 0.18763056086935437,
+      "volatility": 0.42194223565938,
+      "riskContribution": 0.2500000698280597,
+      "normal": {
+        "lower": 0.16886750478241894,
+        "upper": 0.20639361695628983
+      },
+      "soft": {
+        "lower": 0.1501044486954835,
+        "upper": 0.22515667304322523
+      },
+      "band": "HARD",
+      "drift": 0.2099959009892849,
+      "recommendation": "SELL",
+      "targetTradeAmount": 230261870.40810728,
+      "active": true,
+      "fundedTradeAmount": 230261870.40810728,
+      "sharesToTrade": 5281.235559818974,
+      "expectedValue": 205738129.59189272,
+      "expectedWeight": 0.18763056086935437
+    },
+    {
+      "ticker": "FPT",
+      "averageCostBasis": 73800,
+      "currentShares": 3000,
+      "currentPrice": 71800,
+      "value": 215400000,
+      "currentWeight": 0.19644206395493324,
+      "ercWeight": 0.2700882797538436,
+      "volatility": 0.2748584455014581,
+      "riskContribution": 0.24999996005740435,
+      "normal": {
+        "lower": 0.24307945177845924,
+        "upper": 0.297097107729228
+      },
+      "soft": {
+        "lower": 0.21607062380307487,
+        "upper": 0.32410593570461227
+      },
+      "band": "HARD",
+      "drift": -0.07364621579891034,
+      "recommendation": "BUY",
+      "targetTradeAmount": 80753554.32390791,
+      "active": true,
+      "fundedTradeAmount": 80753554.32390791,
+      "sharesToTrade": 1124.7013137034528,
+      "expectedValue": 296153554.3239079,
+      "expectedWeight": 0.2700882797538436
+    },
+    {
+      "ticker": "REE",
+      "averageCostBasis": 0,
+      "currentShares": 0,
+      "currentPrice": 48000,
+      "value": 0,
+      "currentWeight": 0,
+      "ercWeight": 0.23718037398298478,
+      "volatility": 0.326064366368386,
+      "riskContribution": 0.249999998612839,
+      "normal": {
+        "lower": 0.2134623365846863,
+        "upper": 0.2608984113812833
+      },
+      "soft": {
+        "lower": 0.18974429918638783,
+        "upper": 0.2846164487795817
+      },
+      "band": "HARD",
+      "drift": -0.23718037398298478,
+      "recommendation": "BUY",
+      "targetTradeAmount": 260069821.7447737,
+      "active": true,
+      "fundedTradeAmount": 260069821.7447737,
+      "sharesToTrade": 5418.121286349452,
+      "expectedValue": 260069821.7447737,
+      "expectedWeight": 0.23718037398298478
+    }
+  ],
+  "inputs": [
+    {
+      "ticker": "ACB",
+      "averageCostBasis": 19760,
+      "currentShares": 19210,
+      "currentPrice": 22650
+    },
+    {
+      "ticker": "DGC",
+      "averageCostBasis": 52760,
+      "currentShares": 10000,
+      "currentPrice": 43600
+    },
+    {
+      "ticker": "FPT",
+      "averageCostBasis": 73800,
+      "currentShares": 3000,
+      "currentPrice": 71800
+    },
+    {
+      "ticker": "REE",
+      "averageCostBasis": 0,
+      "currentShares": 0,
+      "currentPrice": 48000
+    }
+  ],
+  "portfolioState": {
+    "updatedAt": "2026-08-10T15:07:26.699Z",
+    "totalNav": 1096527900,
+    "equityNav": 1096527900,
+    "cashReserve": 1.1920928955078125e-7,
+    "holdings": [
+      {
+        "ticker": "ACB",
+        "shares": 14770,
+        "price": 22650,
+        "averageCost": 19760,
+        "marketValue": 334540500,
+        "weight": 0.3050907323014763,
+        "active": true,
+        "initialShares": 19210,
+        "action": "SELL",
+        "tradeShares": 4440,
+        "ercTargetWeight": 0.30510078539381713
+      },
+      {
+        "ticker": "DGC",
+        "shares": 4719,
+        "price": 43600,
+        "averageCost": 52760,
+        "marketValue": 205748400,
+        "weight": 0.18763626534263286,
+        "active": true,
+        "initialShares": 10000,
+        "action": "SELL",
+        "tradeShares": 5281,
+        "ercTargetWeight": 0.18763056086935437
+      },
+      {
+        "ticker": "FPT",
+        "shares": 4125,
+        "price": 71800,
+        "averageCost": 73800,
+        "marketValue": 296175000,
+        "weight": 0.2701025664736848,
+        "active": true,
+        "initialShares": 3000,
+        "action": "BUY",
+        "tradeShares": 1125,
+        "ercTargetWeight": 0.2700882797538436
+      },
+      {
+        "ticker": "REE",
+        "shares": 5418,
+        "price": 48000,
+        "averageCost": 48000,
+        "marketValue": 260064000,
+        "weight": 0.23717043588220602,
+        "active": true,
+        "initialShares": 0,
+        "action": "BUY",
+        "tradeShares": 5418,
+        "ercTargetWeight": 0.23718037398298478
+      }
+    ]
+  }
+}
+
+===================================

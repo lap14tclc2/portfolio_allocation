@@ -1,0 +1,211 @@
+{
+  "generatedAt": "2026-08-10T14:16:17.439Z",
+  "nav": 1136506500,
+  "equityNav": 1086506500,
+  "cashReserve": 50000000,
+  "cashDeployed": 37083456.71410555,
+  "remainingCash": 12916543.285894454,
+  "hardBank": 153880666.75988138,
+  "fundedBuyTotal": 190964123.47398692,
+  "annualTarget": {
+    "year": 2026,
+    "allocationDate": "2026-01-01",
+    "riskWindow": {
+      "start": "2021-01-01",
+      "end": "2025-12-31"
+    },
+    "status": "LOCKED",
+    "targetSource": "Annual ERC Target",
+    "applicability": "VALID"
+  },
+  "erc": {
+    "weights": [
+      0.39421071792013035,
+      0.2482338052973024,
+      0.3575554767825674
+    ],
+    "volatility": [
+      0.2601792508333572,
+      0.42194223565938,
+      0.2748584455014581
+    ],
+    "riskContributions": [
+      0.3333333050970052,
+      0.333333421928649,
+      0.33333327297434573
+    ],
+    "portfolioRisk": 0.2396084509126425,
+    "observations": 1066,
+    "diagnostics": {
+      "valid": true,
+      "observations": 1066,
+      "dateRange": {
+        "start": "2021-08-16",
+        "end": "2025-12-31"
+      },
+      "riskWindow": {
+        "start": "2021-01-01",
+        "end": "2025-12-31"
+      },
+      "portfolioRisk": 0.2396084509126425,
+      "portfolioVariance": 0.0574122097487562,
+      "weightSum": 1,
+      "crcSum": 0.2396084509126425,
+      "rcSum": 1,
+      "ercError": 8.859531569482826e-8
+    }
+  },
+  "results": [
+    {
+      "ticker": "ACB",
+      "averageCostBasis": 19760,
+      "currentShares": 19210,
+      "currentPrice": 22650,
+      "value": 435106500,
+      "currentWeight": 0.3828455886525946,
+      "ercWeight": 0.39421071792013035,
+      "volatility": 0.2601792508333572,
+      "riskContribution": 0.3333333050970052,
+      "normal": {
+        "lower": 0.3547896461281173,
+        "upper": 0.43363178971214345
+      },
+      "soft": {
+        "lower": 0.3153685743361043,
+        "upper": 0.4730528615041564
+      },
+      "band": "NORMAL",
+      "drift": -0.011365129267535745,
+      "recommendation": "HOLD",
+      "targetTradeAmount": 0,
+      "active": true,
+      "fundedTradeAmount": 0,
+      "sharesToTrade": 0,
+      "expectedValue": 435106500,
+      "expectedWeight": 0.3828455886525946
+    },
+    {
+      "ticker": "DGC",
+      "averageCostBasis": 52760,
+      "currentShares": 10000,
+      "currentPrice": 43600,
+      "value": 436000000,
+      "currentWeight": 0.383631769813899,
+      "ercWeight": 0.2482338052973024,
+      "volatility": 0.42194223565938,
+      "riskContribution": 0.333333421928649,
+      "normal": {
+        "lower": 0.22341042476757217,
+        "upper": 0.27305718582703264
+      },
+      "soft": {
+        "lower": 0.19858704423784193,
+        "upper": 0.29788056635676285
+      },
+      "band": "HARD",
+      "drift": 0.1353979645165966,
+      "recommendation": "SELL",
+      "targetTradeAmount": 153880666.75988138,
+      "active": true,
+      "fundedTradeAmount": 153880666.75988138,
+      "sharesToTrade": 3529.3730908229672,
+      "expectedValue": 282119333.2401186,
+      "expectedWeight": 0.2482338052973024
+    },
+    {
+      "ticker": "FPT",
+      "averageCostBasis": 73800,
+      "currentShares": 3000,
+      "currentPrice": 71800,
+      "value": 215400000,
+      "currentWeight": 0.18952817251815102,
+      "ercWeight": 0.3575554767825674,
+      "volatility": 0.2748584455014581,
+      "riskContribution": 0.33333327297434573,
+      "normal": {
+        "lower": 0.32179992910431066,
+        "upper": 0.39331102446082417
+      },
+      "soft": {
+        "lower": 0.28604438142605393,
+        "upper": 0.42906657213908084
+      },
+      "band": "HARD",
+      "drift": -0.16802730426441637,
+      "recommendation": "BUY",
+      "targetTradeAmount": 190964123.47398692,
+      "active": true,
+      "fundedTradeAmount": 190964123.47398692,
+      "sharesToTrade": 2659.667457854971,
+      "expectedValue": 406364123.4739869,
+      "expectedWeight": 0.3575554767825674
+    }
+  ],
+  "inputs": [
+    {
+      "ticker": "ACB",
+      "averageCostBasis": 19760,
+      "currentShares": 19210,
+      "currentPrice": 22650
+    },
+    {
+      "ticker": "DGC",
+      "averageCostBasis": 52760,
+      "currentShares": 10000,
+      "currentPrice": 43600
+    },
+    {
+      "ticker": "FPT",
+      "averageCostBasis": 73800,
+      "currentShares": 3000,
+      "currentPrice": 71800
+    }
+  ],
+  "portfolioState": {
+    "updatedAt": "2026-08-10T14:16:17.439Z",
+    "totalNav": 1136546643.2858944,
+    "equityNav": 1123630100,
+    "cashReserve": 12916543.285894454,
+    "holdings": [
+      {
+        "ticker": "ACB",
+        "shares": 19210,
+        "price": 22650,
+        "averageCost": 19760,
+        "marketValue": 435106500,
+        "weight": 0.38283206639197337,
+        "active": true,
+        "initialShares": 19210,
+        "action": "HOLD",
+        "tradeShares": 0,
+        "ercTargetWeight": 0.39421071792013035
+      },
+      {
+        "ticker": "DGC",
+        "shares": 6471,
+        "price": 43600,
+        "averageCost": 52760,
+        "marketValue": 282135600,
+        "weight": 0.2482393500229007,
+        "active": true,
+        "initialShares": 10000,
+        "action": "SELL",
+        "tradeShares": 3529,
+        "ercTargetWeight": 0.2482338052973024
+      },
+      {
+        "ticker": "FPT",
+        "shares": 5660,
+        "price": 71800,
+        "averageCost": 73800,
+        "marketValue": 406388000,
+        "weight": 0.3575638557385405,
+        "active": true,
+        "initialShares": 3000,
+        "action": "BUY",
+        "tradeShares": 2660,
+        "ercTargetWeight": 0.3575554767825674
+      }
+    ]
+  }
+}
