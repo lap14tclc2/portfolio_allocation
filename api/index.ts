@@ -5,5 +5,6 @@ const server = createApp();
 
 export default async function handler(req: any, res: any) {
   await storageService.initialize();
-  server.emit('request', req, res);
+  return server.emit('request', req, res);
 }
+
