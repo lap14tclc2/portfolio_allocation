@@ -27,10 +27,16 @@ async function readBody(req: IncomingMessage): Promise<string> {
 }
 
 async function handleServeIndex(res: ServerResponse): Promise<void> {
-  const html = await fs.readFile(path.join(config.root, 'index.html'), 'utf8');
+  let html: string;
+  try {
+    html = await fs.readFile(path.join(config.root, 'index.html'), 'utf8');
+  } catch {
+    html = await fs.readFile(path.join(process.cwd(), 'index.html'), 'utf8');
+  }
   res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
   res.end(html);
 }
+
 
 async function handleServeClientAsset(pathname: string, res: ServerResponse): Promise<void> {
   const relativePath = pathname.replace(/^\/(src\/)?client\//, '');
